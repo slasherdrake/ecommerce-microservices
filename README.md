@@ -32,39 +32,38 @@ The system consists of three core services:
 
 Import this collection into Postman to test all API endpoints.
 
-## Bounded context and data model
+## Bounded context and Data Models
 flowchart TB
-  %% ===== Contexts =====
   subgraph Product_Context["Product Context (product-service)"]
-    PAPI[/"Product API\n/products/*"/]
+    PAPI[/"Product API"/]
     PDB[("products DB")]
   end
+
   subgraph Order_Context["Order Context (order-service)"]
-    OAPI[/"Order API\n/orders/*"/]
+    OAPI[/"Order API"/]
     ODB[("orders DB")]
   end
+
   PAPI <--> OAPI:::rest
   PAPI --- PDB
   OAPI --- ODB
 
-  %% ===== Domain models (class-like cards) =====
+  %% Product Domain Model
   subgraph Product_Domain["Product Domain Model"]
     ProductClass["
     Product
     ───────────────
     id: Long
     name: String
-    description: String
-    price: Decimal(12,2)
-    stockQuantity: Integer
+    price: Decimal
+    stockQuantity: Int
     category: String
     createdAt: Instant
     updatedAt: Instant
-    ───────────────
-    adjustStock(delta)
     "]
   end
 
+  %% Order Domain Model
   subgraph Order_Domain["Order Domain Model"]
     OrderClass["
     Order
@@ -72,20 +71,17 @@ flowchart TB
     id: Long
     customerId: Long
     status: OrderStatus
-    total: Decimal(12,2)
+    total: Decimal
     createdAt: Instant
-    ───────────────
-    addItem(item)
     "]
     OrderItemClass["
     OrderItem
     ───────────────
     id: Long
-    orderId: Long (FK local)
-    productId: Long (ref Product)
-    quantity: Integer
-    unitPrice: Decimal(12,2)
-    lineTotal: Decimal(12,2)
+    productId: Long
+    quantity: Int
+    unitPrice: Decimal
+    lineTotal: Decimal
     "]
     OrderStatus["
     «enum» OrderStatus
@@ -96,23 +92,13 @@ flowchart TB
     "]
   end
 
-  %% Relationships within Order domain
-  OrderClass -->|"contains 1..*"| OrderItemClass
+  %% Relationships
+  OrderClass -->|"contains"| OrderItemClass
   OrderClass --- OrderStatus
+  OrderItemClass -.->|ref productId| ProductClass
 
-  %% Conceptual reference across contexts (no shared DB)
-  OrderItemClass -.->|references by id| ProductClass
-
-  %% Styling & notes
   classDef rest stroke-dasharray: 5 5
-  note right of Product_Context
-    Owns Product
-    Provides price & stock
-  end
-  note left of Order_Context
-    Owns Order, OrderItem
-    Consumes Product API
-  end
+
 
 ## Initial Configuration
 1.	Apache Maven (http://maven.apache.org)
