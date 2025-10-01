@@ -69,7 +69,7 @@ $ docker compose up --build
 
 # Build service images and start and run containers
 # Starting in the root repository
-#This will run the prod profile
+# This will run the prod profile
 $ export SPRING_PROFILES_ACTIVE=prod
 docker-compose -f docker/docker-compose.yml up --build
 
