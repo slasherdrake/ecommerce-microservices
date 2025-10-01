@@ -1,0 +1,32 @@
+# spring:
+#   application:
+#     name: product-service
+  # datasource:
+  #   url: jdbc:postgresql://localhost:5434/productdb
+  #   username: postgres
+  #   password: password
+  #   driver-class-name: org.postgresql.Driver
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: update
+spring:
+  application:
+    name: product-service
+  config:
+    import: "optional:configserver:http://config-server:8888"
+  cloud:
+    compatibility-verifier:
+      enabled: false
+server:
+  port: 8081
+#talks with config server:
+
+# spring:
+#     application:
+#         name: product-service
+#     cloud:
+#         config:
+#             uri: http://localhost:8888
+            
+    
+    

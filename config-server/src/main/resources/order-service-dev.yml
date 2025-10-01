@@ -1,0 +1,21 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://orderdb:5432/orderdb
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+product:
+  service:
+    base-url: http://product-service:8081/api
+
+logging:
+  level:
+    com.ecommerce: DEBUG
