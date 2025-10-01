@@ -73,5 +73,11 @@ $ docker compose up --build
 $ export SPRING_PROFILES_ACTIVE=prod
 docker-compose -f docker/docker-compose.yml up --build
 
+# To stop any running containers 
+# (recommended inbetween deployments)
+# Starting in the root repository
+$ docker-compose -f docker/docker-compose.yml down
+
+
 ```
 
