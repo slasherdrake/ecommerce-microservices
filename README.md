@@ -61,13 +61,13 @@ $ mvn clean package -DskipTests
 $ cd order-service
 $ mvn clean package -DskipTests
 
-#Build service images and start and run containers
+# Build service images and start and run containers
 # Starting in the root repository
-#This will run the dev profile
+# This will run the dev profile
 $ cd docker
 $ docker compose up --build
 
-#Build service images and start and run containers
+# Build service images and start and run containers
 # Starting in the root repository
 #This will run the prod profile
 $ export SPRING_PROFILES_ACTIVE=prod
