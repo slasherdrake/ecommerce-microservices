@@ -14,6 +14,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks:
+      - backend
 
   order-db:
     image: postgres:16
@@ -29,6 +31,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks:
+      - backend
 
   config-server:
     build:
@@ -40,6 +44,13 @@ services:
       SPRING_PROFILES_ACTIVE: native
     ports:
       - "8888:8888"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 
   product-service:
@@ -52,20 +63,17 @@ services:
       product-db:
         condition: service_healthy
       config-server:
+        condition: service_healthy
+      eureka-server:
         condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: dev
-      # direct DB props (no config server)
-      # SPRING_DATASOURCE_URL: jdbc:postgresql://productdb:5432/productdb
-      # SPRING_DATASOURCE_USERNAME: postgres
-      # SPRING_DATASOURCE_PASSWORD: password
-      # SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      # SPRING_JPA_SHOW_SQL: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
 
-      # optional: log level
-      # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: INFO
     ports:
       - "8081:8081"
+    networks:
+      - backend
 
   order-service:
     build:
@@ -77,11 +85,14 @@ services:
       order-db:
         condition: service_healthy
       config-server:
-        condition: service_started
+        condition: service_healthy
       product-service:
+        condition: service_started
+      eureka-server:
         condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: dev
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
       # SPRING_DATASOURCE_URL: jdbc:postgresql://orderdb:5432/orderdb
       # SPRING_DATASOURCE_USERNAME: postgres
       # SPRING_DATASOURCE_PASSWORD: password
@@ -92,6 +103,31 @@ services:
       # product.service.base-url: http://product-service:8081/api
     ports:
       - "8082:8082"
+    networks:
+      - backend
 
+  eureka-server:
+    build:
+      context: ../eurekaserver
+      args:
+        JAR_FILE: target/eurekaserver-0.0.1-SNAPSHOT.jar
+    ports:
+      - "8070:8070"
+    environment:
+      SPRING_PROFILES_ACTIVE: "peer1"
+      SERVER_PORT: 8070
+      EUREKA_INSTANCE_HOSTNAME: "eureka-server"
+      CONFIGSERVER_URI: "http://config-server:8888"
+    depends_on:
+      config-server:
+        condition: service_started  
+    networks:
+      backend:
+        aliases:
+          - "eureka-server"
+
+networks:
+  backend:
+    driver: bridge
 
   

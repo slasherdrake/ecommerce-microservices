@@ -23,9 +23,10 @@
 	</properties>
 
   <modules>
-    <!--<module>config-service</module> -->
-    <!--<module>order-service</module> -->
+    <module>config-service</module>
+    <module>order-service</module>
     <module>product-service</module>
+    <module>eurekaserver</module>
   </modules>
   <build>
     <plugins>

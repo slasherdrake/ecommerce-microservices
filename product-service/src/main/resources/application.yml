@@ -19,6 +19,7 @@ spring:
       enabled: false
 server:
   port: 8081
+
 #talks with config server:
 
 # spring:
