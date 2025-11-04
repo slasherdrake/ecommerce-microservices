@@ -12,19 +12,30 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
+
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepo;
     private final ProductClient productClient;
+    // private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+
 
     public OrderService(OrderRepository orderRepo, ProductClient productClient) {
         this.orderRepo = orderRepo;
         this.productClient = productClient;
     }
-
+    
+    @CircuitBreaker(name = "orderservice", fallbackMethod = "CreateFallback")
     @Transactional
-    public Order create(CreateOrderRequest req) {
+    public Order create(CreateOrderRequest req){
+        // if ("true".equals(fail)) {
+        //     sleep();
+        //     throw new TimeoutException("Forced failure for testing");
+        // }
         if (req.getItems() == null || req.getItems().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item");
         }
@@ -59,7 +70,6 @@ public class OrderService {
         order.setStatus(OrderStatus.CONFIRMED);
         Order saved = orderRepo.save(order);
 
-        // Phase 1 demo only: decrement stock in Product Service
         for (OrderItem oi : saved.getItems()) {
             productClient.adjustStock(oi.getProductId(), -oi.getQuantity());
         }
@@ -82,5 +92,26 @@ public class OrderService {
         }
         orderRepo.deleteById(id);
     }
+
+    // public Order CreateFallback(CreateOrderRequest req, String fail, Throwable t) {
+    //     logger.warn("Circuit breaker activated for order creation: {}", t.getMessage());
+        
+    //     Order fallback = new Order();
+    //     fallback.setCustomerId(req.getCustomerId());
+    //     fallback.setStatus(OrderStatus.CANCELED);
+    //     fallback.setTotal(BigDecimal.ZERO);
+        
+    //     return orderRepo.save(fallback);
+    // }
+
+    // private void sleep() throws TimeoutException{
+    //     try {
+    //         System.out.println("Sleep - simulating failure");
+    //         Thread.sleep(5000);
+    //         throw new java.util.concurrent.TimeoutException();
+    //     } catch (InterruptedException e) {
+	// 		logger.error(e.getMessage());
+    //     }
+    // }
 }
 

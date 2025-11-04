@@ -5,6 +5,9 @@ import com.ecommerce.productservice.service.ProductService;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.TimeoutException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -28,9 +31,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Product product = service.getProductById(id);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<Product> getProductById(@PathVariable Long id, @RequestParam(value = "fail",required = false) String fail) throws TimeoutException {
+            Product product = service.getProductById(id, fail);
+            return ResponseEntity.ok(product);
     }
 
     @GetMapping
@@ -72,8 +75,8 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("/{id}/adjust-stock")
-    public ResponseEntity<Product> adjustStock(@PathVariable Long id, @RequestParam int delta) {
-        Product product = service.getProductById(id);
+    public ResponseEntity<Product> adjustStock(@PathVariable Long id, @RequestParam int delta) throws TimeoutException {
+        Product product = service.getProductById(id, "false");
         int newQuantity = product.getQuantity() + delta;
         if (newQuantity < 0) {
             throw new IllegalArgumentException("Insufficient stock");
@@ -81,6 +84,7 @@ public class ProductController {
         product.setQuantity(newQuantity);
         Product updated = service.updateProduct(id, product);
         return ResponseEntity.ok(updated);
-    }
     
+    }
+
 }
