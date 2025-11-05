@@ -1,0 +1,609 @@
+{
+	"info": {
+		"_postman_id": "bf46d12e-156a-46d6-bd6a-ecc8f60bd624",
+		"name": "Phase2Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37956078"
+	},
+	"item": [
+		{
+			"name": "admin access token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "EVzgpoFKtL3p5ztKfpCCNOTgNvyrPIRn",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "ecommerce",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "adminusername",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/realms/drake-realm/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"drake-realm",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user access token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "EVzgpoFKtL3p5ztKfpCCNOTgNvyrPIRn",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "ecommerce",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "userusername",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/realms/drake-realm/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"drake-realm",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Products",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Create Product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"iPhone 15\",\n  \"description\": \"Latest iPhone model\",\n  \"price\": 999.99,\n  \"quantity\": 50,\n  \"category\": \"Electronics\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Product (with Invalid Data)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"\",\n  \"price\": -10,\n  \"quantity\": -5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Products by Category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/products?category=Electronics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "Electronics"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product by Name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/products/name/iPhone-15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products",
+						"name",
+						"iPhone-15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update by Name",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"iPhone 15\",\n  \"description\": \"Updated description for iPhone 15\",\n  \"price\": 899.99,\n  \"quantity\": 75,\n  \"category\": \"Electronics\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/products/name/iPhone-15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products",
+						"name",
+						"iPhone-15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update by ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyM0ozamlRZHJFa0JJT2ZtYmg1R0FMajZYekVPbVQzSlRyaFpMQ1lsSGY4In0.eyJleHAiOjE3NjIzMjQ0NjksImlhdCI6MTc2MjMyNDE2OSwianRpIjoiYzVkZWZkNDQtZGIxYS00NzA3LTgxZTEtODc2ZmNhMzUxZTNjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL2RyYWtlLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImNlMzZmNjhiLWYyMWQtNGQ3Zi05NDNiLTJiMWRiZTNlYThhMSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImVjb21tZXJjZSIsInNlc3Npb25fc3RhdGUiOiI2Y2MxYmZhNS01ZTE1LTQzN2YtYWMxMy1kYjg5YWQ3OTExYjciLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImVjb21tZXJjZS1hZG1pbiIsIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1kcmFrZS1yZWFsbSIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiZWNvbW1lcmNlIjp7InJvbGVzIjpbIkFETUlOIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiI2Y2MxYmZhNS01ZTE1LTQzN2YtYWMxMy1kYjg5YWQ3OTExYjciLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWludXNlcm5hbWUiLCJnaXZlbl9uYW1lIjoiIiwiZmFtaWx5X25hbWUiOiIifQ.ILp5fMR3dfj4sPmFytRAHZw-wki1HZZlqBRZJ_Z1iDnITS_HSYg8DjsXFRvD9_63En4V60N8BW3o20fgbQA8woW_xBKOQ4CVug0n2On0_ZgivDReck4jDnFvk1hPXCgVbZsJap0w4eJ-4br_MZEFknuBGHylRd0ux9w2vcHFw1AlIrBOV5g3fwjdxlfz4adQqPEhq3OHJ3lQ8l8sOA1vAf2UmKNJm749Ul8Ta3Dx-VBIckKSwmknT7KBBpo-j5NQXSEFXBdyG-6m3YfZzbblgXJ0gnqPAM6rDH36XBschoSN2vduJa-wijJrnKkesi5ugdfrd62oYdknB4M1MT6GdQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"iPhone 15 Pro Max\",\n  \"description\": \"Updated to Pro Max model with larger screen\",\n  \"price\": 1299.99,\n  \"quantity\": 25,\n  \"category\": \"Premium Electronics\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete by ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyM0ozamlRZHJFa0JJT2ZtYmg1R0FMajZYekVPbVQzSlRyaFpMQ1lsSGY4In0.eyJleHAiOjE3NjIzMjQ0NjksImlhdCI6MTc2MjMyNDE2OSwianRpIjoiYzVkZWZkNDQtZGIxYS00NzA3LTgxZTEtODc2ZmNhMzUxZTNjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL2RyYWtlLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImNlMzZmNjhiLWYyMWQtNGQ3Zi05NDNiLTJiMWRiZTNlYThhMSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImVjb21tZXJjZSIsInNlc3Npb25fc3RhdGUiOiI2Y2MxYmZhNS01ZTE1LTQzN2YtYWMxMy1kYjg5YWQ3OTExYjciLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImVjb21tZXJjZS1hZG1pbiIsIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1kcmFrZS1yZWFsbSIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiZWNvbW1lcmNlIjp7InJvbGVzIjpbIkFETUlOIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiI2Y2MxYmZhNS01ZTE1LTQzN2YtYWMxMy1kYjg5YWQ3OTExYjciLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWludXNlcm5hbWUiLCJnaXZlbl9uYW1lIjoiIiwiZmFtaWx5X25hbWUiOiIifQ.ILp5fMR3dfj4sPmFytRAHZw-wki1HZZlqBRZJ_Z1iDnITS_HSYg8DjsXFRvD9_63En4V60N8BW3o20fgbQA8woW_xBKOQ4CVug0n2On0_ZgivDReck4jDnFvk1hPXCgVbZsJap0w4eJ-4br_MZEFknuBGHylRd0ux9w2vcHFw1AlIrBOV5g3fwjdxlfz4adQqPEhq3OHJ3lQ8l8sOA1vAf2UmKNJm749Ul8Ta3Dx-VBIckKSwmknT7KBBpo-j5NQXSEFXBdyG-6m3YfZzbblgXJ0gnqPAM6rDH36XBschoSN2vduJa-wijJrnKkesi5ugdfrd62oYdknB4M1MT6GdQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete by Name",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJyM0ozamlRZHJFa0JJT2ZtYmg1R0FMajZYekVPbVQzSlRyaFpMQ1lsSGY4In0.eyJleHAiOjE3NjIzMjQ0NjksImlhdCI6MTc2MjMyNDE2OSwianRpIjoiYzVkZWZkNDQtZGIxYS00NzA3LTgxZTEtODc2ZmNhMzUxZTNjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL2RyYWtlLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImNlMzZmNjhiLWYyMWQtNGQ3Zi05NDNiLTJiMWRiZTNlYThhMSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImVjb21tZXJjZSIsInNlc3Npb25fc3RhdGUiOiI2Y2MxYmZhNS01ZTE1LTQzN2YtYWMxMy1kYjg5YWQ3OTExYjciLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImVjb21tZXJjZS1hZG1pbiIsIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1kcmFrZS1yZWFsbSIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiZWNvbW1lcmNlIjp7InJvbGVzIjpbIkFETUlOIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiI2Y2MxYmZhNS01ZTE1LTQzN2YtYWMxMy1kYjg5YWQ3OTExYjciLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWludXNlcm5hbWUiLCJnaXZlbl9uYW1lIjoiIiwiZmFtaWx5X25hbWUiOiIifQ.ILp5fMR3dfj4sPmFytRAHZw-wki1HZZlqBRZJ_Z1iDnITS_HSYg8DjsXFRvD9_63En4V60N8BW3o20fgbQA8woW_xBKOQ4CVug0n2On0_ZgivDReck4jDnFvk1hPXCgVbZsJap0w4eJ-4br_MZEFknuBGHylRd0ux9w2vcHFw1AlIrBOV5g3fwjdxlfz4adQqPEhq3OHJ3lQ8l8sOA1vAf2UmKNJm749Ul8Ta3Dx-VBIckKSwmknT7KBBpo-j5NQXSEFXBdyG-6m3YfZzbblgXJ0gnqPAM6rDH36XBschoSN2vduJa-wijJrnKkesi5ugdfrd62oYdknB4M1MT6GdQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/products/name/iPhone-15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products",
+						"name",
+						"iPhone-15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"customerId\": 123,\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order (insufficient Stock))",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"customerId\": 123,\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 1000\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order (non-existent product)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"customerId\": 123,\n  \"items\": [\n    {\n      \"productId\": 999,\n      \"quantity\": 1\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/orders/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"orders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/orders/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"orders",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Circuit-breaker Test product-service",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/products/1?fail=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"products",
+						"1"
+					],
+					"query": [
+						{
+							"key": "fail",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "routes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8072/actuator/gateway/routes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8072",
+					"path": [
+						"actuator",
+						"gateway",
+						"routes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh routes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8072/actuator/gateway/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8072",
+					"path": [
+						"actuator",
+						"gateway",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
