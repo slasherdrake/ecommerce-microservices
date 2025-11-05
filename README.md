@@ -56,7 +56,7 @@ The system consists of the following services:
 
 ## API Testing
 
-📋 **[Download Postman Collection](./ProjectPhase1Collection.postman_collection.json)**
+📋 **[Download Postman Collection](./ProjectPhase2Collection.postman_collection.json)**
 
 Import this collection into Postman to test all API endpoints.
 
