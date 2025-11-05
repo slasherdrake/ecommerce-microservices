@@ -1,4 +1,4 @@
-//package main.java.com.ecommerce.productservice;
+package com.ecommerce.productservice.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

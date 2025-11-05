@@ -17,17 +17,15 @@ spring:
   cloud:
     compatibility-verifier:
       enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt: {}
 server:
   port: 8081
 
-#talks with config server:
 
-# spring:
-#     application:
-#         name: product-service
-#     cloud:
-#         config:
-#             uri: http://localhost:8888
+
 
 
 

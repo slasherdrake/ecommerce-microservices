@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
 
     private final OrderService service;
@@ -23,7 +23,15 @@ public class OrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Order create(@RequestBody CreateOrderRequest req){
-        return service.create(req);
+        System.out.println("OrderController.create() called with request: " + req);
+        try {
+            Order result = service.create(req);
+            System.out.println("OrderController.create() successful, returning order: " + result.getId());
+            return result;
+        } catch (Exception e) {
+            System.out.println("OrderController.create() failed with exception: " + e.getMessage());
+            throw e;
+        }
     }
 
     @GetMapping("/{id}")

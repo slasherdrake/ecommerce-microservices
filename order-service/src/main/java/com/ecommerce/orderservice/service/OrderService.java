@@ -20,33 +20,54 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 public class OrderService {
 
     private final OrderRepository orderRepo;
-    private final ProductClient productClient;
     // private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
 
-    public OrderService(OrderRepository orderRepo, ProductClient productClient) {
+    public OrderService(OrderRepository orderRepo) {
         this.orderRepo = orderRepo;
-        this.productClient = productClient;
     }
     
-    @CircuitBreaker(name = "orderservice", fallbackMethod = "CreateFallback")
     @Transactional
     public Order create(CreateOrderRequest req){
-        // if ("true".equals(fail)) {
-        //     sleep();
-        //     throw new TimeoutException("Forced failure for testing");
-        // }
+        System.out.println("OrderService.create() called with request: " + req);
+        
         if (req.getItems() == null || req.getItems().isEmpty()) {
+            System.out.println("Order creation failed: No items provided");
             throw new IllegalArgumentException("Order must contain at least one item");
         }
 
+        System.out.println("Creating order for customer: " + req.getCustomerId());
         Order order = new Order();
         order.setCustomerId(req.getCustomerId());
 
         BigDecimal total = BigDecimal.ZERO;
 
         for (CreateOrderRequest.Item it : req.getItems()) {
-            ProductView pv = productClient.getProduct(it.productId);
+            System.out.println("Processing item: productId=" + it.productId + ", quantity=" + it.quantity);
+            
+            // Get JWT token and make direct HTTP call to product service
+            org.springframework.security.core.Authentication auth = 
+                org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+            
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            if (auth instanceof org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken jwtAuth) {
+                String tokenValue = jwtAuth.getToken().getTokenValue();
+                headers.set("Authorization", "Bearer " + tokenValue);
+                System.out.println("OrderService: Adding Authorization header for product request");
+            }
+            
+            org.springframework.http.HttpEntity<?> entity = new org.springframework.http.HttpEntity<>(headers);
+            org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
+            
+            ProductView pv;
+            try {
+                pv = restTemplate.exchange("http://product-service:8081/api/products/{id}", 
+                    org.springframework.http.HttpMethod.GET, entity, ProductView.class, it.productId).getBody();
+                System.out.println("OrderService: Got product: " + pv);
+            } catch (Exception e) {
+                System.out.println("OrderService: Error getting product: " + e.getMessage());
+                pv = null;
+            }
             if (pv == null) {
                 order.setStatus(OrderStatus.CANCELED);
                 throw new RuntimeException("Product " + it.productId + " not found");
@@ -70,9 +91,7 @@ public class OrderService {
         order.setStatus(OrderStatus.CONFIRMED);
         Order saved = orderRepo.save(order);
 
-        for (OrderItem oi : saved.getItems()) {
-            productClient.adjustStock(oi.getProductId(), -oi.getQuantity());
-        }
+        // Stock adjustment removed for simplicity
 
         return saved;
     }

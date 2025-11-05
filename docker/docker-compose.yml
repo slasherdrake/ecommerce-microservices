@@ -154,6 +154,25 @@ services:
       backend:
         aliases:
           - "gateway"
+  keycloak:
+    image: quay.io/keycloak/keycloak:legacy
+    restart: always
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    volumes:
+     - ./realm-export.json:/opt/jboss/realm-export.json
+    command:
+      - "-b 0.0.0.0"
+      - "-Dkeycloak.import=/opt/jboss/realm-export.json"
+      - "-Dkeycloak.profile.feature.scripts=enabled"
+      - "-Dkeycloak.profile.feature.upload_scripts=enabled"
+    ports:
+      - "8080:8080"
+    networks:
+      backend:
+        aliases:
+          - "keycloak"
 networks:
   backend:
     driver: bridge
