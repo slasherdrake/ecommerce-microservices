@@ -41,18 +41,16 @@ The system consists of the following services:
 
 ### Authentication & Security
 - **Keycloak Integration**: OAuth2/JWT authentication with role-based access control
-- **JWT Token Forwarding**: Seamless token propagation between microservices
 - **Role-Based Authorization**: ADMIN and USER roles with different permissions
 
 ### Resilience & Fault Tolerance
-- **Circuit Breaker**: Resilience4j implementation in Order Service for Product Service calls
-- **Fallback Mechanisms**: Graceful degradation when services are unavailable
-- **Timeout Handling**: Configurable timeouts for service-to-service communication
+- **Circuit Breaker**:
+- **Fallback Mechanisms**: 
+
 
 ### Service Discovery & Routing
 - **Eureka Service Registry**: Automatic service registration and discovery
 - **API Gateway**: Centralized routing with load balancing capabilities
-- **Health Checks**: Built-in health monitoring for all services
 
 ## API Testing
 
