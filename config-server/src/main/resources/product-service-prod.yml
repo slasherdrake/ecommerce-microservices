@@ -13,19 +13,10 @@ spring:
       ddl-auto: none
     show-sql: false
 
-  data:
-    redis:
-      host: ecomm-redis-7dpadi.serverless.use1.cache.amazonaws.com:6379
-      port: 6379
-  cache:
-    type: redis
-    redis:
-      time-to-live: 600000
-
-  zipkin:
-    base-url: http://zipkin:9411
-
   cloud:
+    config:
+      uri: http://config-server:8888
+
     stream:
       function:
         definition: consumeOrderCreated
@@ -37,6 +28,18 @@ spring:
       kafka:
         binder:
           brokers: kafka:9092
+
+  data:
+    redis:
+      host: ecomm-redis-7dpadi.serverless.use1.cache.amazonaws.com
+      port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
+
+  zipkin:
+    base-url: http://zipkin:9411
 
 logging:
   level:
@@ -76,3 +79,4 @@ resilience4j:
           - java.io.IOException
           - java.util.concurrent.TimeoutException
           - org.springframework.web.client.ResourceAccessException
+

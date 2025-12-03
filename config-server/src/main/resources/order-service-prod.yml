@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://database-1.ct24co2ckluv.us-east-1.rds.amazonaws.com/orderdb
+    url: jdbc:postgresql://database-1.ct24co2ckluv.us-east-1.rds.amazonaws.com:5432/orderdb
     username: postgres
     password: rdspass1
     driver-class-name: org.postgresql.Driver
@@ -13,10 +13,10 @@ spring:
       ddl-auto: none
     show-sql: false
 
-  zipkin:
-    base-url: http://zipkin:9411
-
   cloud:
+    config:
+      uri: http://config-server:8888
+
     stream:
       bindings:
         orderCreated-out-0:
@@ -25,6 +25,9 @@ spring:
       kafka:
         binder:
           brokers: kafka:9092
+
+  zipkin:
+    base-url: http://zipkin:9411
 
 management:
   tracing:
@@ -36,7 +39,6 @@ management:
 
 product:
   service:
-    # Product service is in the internal Docker network
     base-url: http://product-service:8081/api
 
 logging:
