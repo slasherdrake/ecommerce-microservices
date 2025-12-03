@@ -1,23 +1,30 @@
+server:
+  port: 8081
+
 spring:
   datasource:
-    url: jdbc:postgresql://productdb:5432/productdb
+    url: jdbc:postgresql://database-1.ct24co2ckluv.us-east-1.rds.amazonaws.com:5432/productdb
     username: postgres
-    password: password
+    password: rdspass1
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: false
+
   data:
     redis:
-      host: ecomm-redis-7dpadi.serverless.use1.cache.amazonaws.com
+      host: ecomm-redis-7dpadi.serverless.use1.cache.amazonaws.com:6379
       port: 6379
-      ssl:
-        enabled: true
   cache:
     type: redis
     redis:
       time-to-live: 600000
+
+  zipkin:
+    base-url: http://zipkin:9411
+
   cloud:
     stream:
       function:
@@ -29,14 +36,32 @@ spring:
           group: product-service-group
       kafka:
         binder:
-          brokers: kafka
+          brokers: kafka:9092
 
 logging:
   level:
-    com.ecommerce: WARN
+    com.ecommerce: INFO
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
 
-           
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8070/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    hostname: product-service
+
 resilience4j:
   circuitbreaker:
     instances:
