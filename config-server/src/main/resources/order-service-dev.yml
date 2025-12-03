@@ -20,11 +20,15 @@ logging:
   level:
     com.ecommerce: DEBUG
 eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: order-service
   client:
     service-url:
       defaultZone: http://eureka-server:8070/eureka/
     register-with-eureka: true
     fetch-registry: true
+  
 
 
 # resilience4j:

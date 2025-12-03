@@ -4,6 +4,7 @@ server:
 eureka:
   instance:
     preferIpAddress: true
+    hostname: gateway-server
   client:
     registerWithEureka: true
     fetchRegistry: true
@@ -13,12 +14,21 @@ eureka:
 spring:
   cloud:
     gateway:
-        discovery.locator:
-          enabled: true
-          lowerCaseServiceId: true
+      discovery.locator:
+        enabled: true
+        lowerCaseServiceId: true
+    loadbalancer:
+      ribbon:
+        enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/drake-realm
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+

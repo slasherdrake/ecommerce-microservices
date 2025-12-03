@@ -65,7 +65,7 @@ public class SecurityConfig {
     @Bean
     public org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder() {
         return org.springframework.security.oauth2.jwt.NimbusJwtDecoder
-                .withJwkSetUri("http://keycloak:8080/auth/realms/drake-realm/protocol/openid-connect/certs")
+                .withJwkSetUri("http://keycloak:8080/realms/drake-realm/protocol/openid-connect/certs")
                 .build();
     }
 }

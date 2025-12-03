@@ -22,6 +22,10 @@ eureka:
       defaultZone: http://eureka-server:8070/eureka/
     register-with-eureka: true
     fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    hostname: product-service
+
 
 
 
