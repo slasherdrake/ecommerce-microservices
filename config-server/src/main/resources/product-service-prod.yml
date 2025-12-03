@@ -8,6 +8,28 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+  data:
+    redis:
+      host: ecomm-redis-7dpadi.serverless.use1.cache.amazonaws.com
+      port: 6379
+      ssl:
+        enabled: true
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
+  cloud:
+    stream:
+      function:
+        definition: consumeOrderCreated
+      bindings:
+        consumeOrderCreated-in-0:
+          destination: order-events
+          content-type: application/json
+          group: product-service-group
+      kafka:
+        binder:
+          brokers: kafka
 
 logging:
   level:

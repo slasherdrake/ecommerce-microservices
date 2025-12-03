@@ -2,12 +2,14 @@ package com.ecommerce.productservice.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

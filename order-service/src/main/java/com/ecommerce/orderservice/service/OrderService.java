@@ -2,6 +2,8 @@ package com.ecommerce.orderservice.service;
 
 import com.ecommerce.orderservice.dto.CreateOrderRequest;
 import com.ecommerce.orderservice.dto.ProductView;
+import com.ecommerce.orderservice.event.OrderCreatedEvent;
+import com.ecommerce.orderservice.event.OrderEventPublisher;
 import com.ecommerce.orderservice.model.Order;
 import com.ecommerce.orderservice.model.OrderItem;
 import com.ecommerce.orderservice.model.OrderStatus;
@@ -12,19 +14,15 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
-
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepo;
-    // private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+    private final OrderEventPublisher orderEventPublisher;
 
-
-    public OrderService(OrderRepository orderRepo) {
+    public OrderService(OrderRepository orderRepo, OrderEventPublisher orderEventPublisher) {
         this.orderRepo = orderRepo;
+        this.orderEventPublisher = orderEventPublisher;
     }
     
     @Transactional
@@ -90,7 +88,14 @@ public class OrderService {
         order.setTotal(total);
         order.setStatus(OrderStatus.CONFIRMED);
         Order saved = orderRepo.save(order);
-
+        OrderCreatedEvent event = new OrderCreatedEvent(
+            saved.getId(), 
+            saved.getCustomerId(),
+            saved.getItems().stream()
+                .map(item -> new OrderCreatedEvent.OrderItem(item.getProductId(), item.getQuantity()))
+                .toList()
+        );
+        orderEventPublisher.publishOrderCreated(event);
         // Stock adjustment removed for simplicity
 
         return saved;

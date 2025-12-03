@@ -33,8 +33,15 @@ public class ProductService {
     public Product createProduct(Product product) {
         return repo.save(product);
     }
+    @org.springframework.cache.annotation.CacheEvict(value = "products", key = "#productId")
+    public void reduceInventory(Long productId, Integer quantity) {
+        Product product = repo.findById(productId).orElseThrow();
+        product.setQuantity(product.getQuantity() - quantity);
+        repo.save(product);
+    }
 
 
+    @org.springframework.cache.annotation.Cacheable(value = "products", key = "#id")
     @CircuitBreaker(name = "productService", fallbackMethod = "getProductByIdFallback")
     public Product getProductById(Long id, String fail) throws TimeoutException{
         if ("true".equals(fail)) {
@@ -52,6 +59,7 @@ public class ProductService {
         return repo.findAll(pageable);
     }
 
+    @org.springframework.cache.annotation.CachePut(value = "products", key = "#id")
     public Product updateProduct(Long id, Product updatedProduct) {
         try {
         Product existingProduct = getProductById(id, "false");
@@ -66,6 +74,7 @@ public class ProductService {
         }
     }
 
+    @org.springframework.cache.annotation.CacheEvict(value = "products", key = "#id")
     public void deleteProduct(Long id) {
         repo.deleteById(id);
     }
