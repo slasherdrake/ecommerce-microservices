@@ -4,21 +4,36 @@ server:
 eureka:
   instance:
     preferIpAddress: true
+    hostname: gateway-server
   client:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
+      # Eureka runs INSIDE Docker on EC2 → internal hostname stays the same
       defaultZone: http://eureka-server:8070/eureka/
 
 spring:
   cloud:
     gateway:
-        discovery.locator:
-          enabled: true
-          lowerCaseServiceId: true
+      discovery.locator:
+        enabled: true
+        lowerCaseServiceId: true
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # PROD Keycloak issuer (public IP)
+          issuer-uri: http://54.166.147.41:8080/realms/drake-realm
+
+  zipkin:
+    # Leave enabled since you're running Zipkin in production Docker
+    base-url: http://zipkin:9411
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+  tracing:
+    sampling:
+      prob

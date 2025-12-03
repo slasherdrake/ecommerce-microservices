@@ -19,10 +19,12 @@ public class OrderService {
 
     private final OrderRepository orderRepo;
     private final OrderEventPublisher orderEventPublisher;
+    private final org.springframework.web.client.RestTemplate restTemplate;
 
-    public OrderService(OrderRepository orderRepo, OrderEventPublisher orderEventPublisher) {
+    public OrderService(OrderRepository orderRepo, OrderEventPublisher orderEventPublisher, org.springframework.web.client.RestTemplate restTemplate) {
         this.orderRepo = orderRepo;
         this.orderEventPublisher = orderEventPublisher;
+        this.restTemplate = restTemplate;
     }
     
     @Transactional
@@ -55,7 +57,6 @@ public class OrderService {
             }
             
             org.springframework.http.HttpEntity<?> entity = new org.springframework.http.HttpEntity<>(headers);
-            org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
             
             ProductView pv;
             try {

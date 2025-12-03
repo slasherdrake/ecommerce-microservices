@@ -1,0 +1,154 @@
+version: '3.8'
+
+services:
+  config-server:
+    build:
+      context: ./config-server
+      args:
+        JAR_FILE: target/config-server-0.0.1-SNAPSHOT.jar
+    container_name: config-server
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8888:8888"
+    networks:
+      - backend
+
+  eureka-server:
+    build:
+      context: ./eurekaserver
+      args:
+        JAR_FILE: target/eurekaserver-0.0.1-SNAPSHOT.jar
+    container_name: eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      CONFIGSERVER_URI: "http://config-server:8888"
+    depends_on:
+      - config-server
+    ports:
+      - "8070:8070"
+    networks:
+      - backend
+
+  product-service:
+    build:
+      context: ./product-service
+      args:
+        JAR_FILE: target/product-service-0.0.1-SNAPSHOT.jar
+    container_name: product-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+    depends_on:
+      - eureka-server
+      - config-server
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+
+  order-service:
+    build:
+      context: ./order-service
+      args:
+        JAR_FILE: target/order-service-0.0.1-SNAPSHOT.jar
+    container_name: order-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+    depends_on:
+      - product-service
+      - eureka-server
+      - config-server
+    ports:
+      - "8082:8082"
+    networks:
+      - backend
+
+  gateway-server:
+    build:
+      context: ./gatewayserver
+      args:
+        JAR_FILE: target/gatewayserver-0.0.1-SNAPSHOT.jar
+    container_name: gateway-server
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8070/eureka/"
+      SPRING_CLOUD_CONFIG_URI: "http://config-server:8888"
+    depends_on:
+      - order-service
+      - product-service
+      - eureka-server
+    ports:
+      - "8072:8072"
+    networks:
+      - backend
+
+  # Optional: Keycloak (production may use a dedicated Keycloak server)
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak
+    restart: always
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_FEATURES: token-exchange
+    command:
+      - start-dev
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+  # Optional: Logging Stack (ELK)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - backend
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.7.0
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+    ports:
+      - "5601:5601"
+    networks:
+      - backend
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.7.0
+    container_name: logstash
+    command: logstash -f /etc/logstash/conf.d/logstash.conf
+    volumes:
+      - ./config:/etc/logstash/conf.d
+    ports:
+      - "5001:5000"
+    networks:
+      - backend
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - "9411:9411"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

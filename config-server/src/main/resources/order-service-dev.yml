@@ -11,6 +11,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  zipkin:
+    base-url: http://zipkin:9411
   cloud:
     stream:
       bindings:
@@ -21,6 +23,14 @@ spring:
         binder:
           brokers: kafka
 
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+
 product:
   service:
     base-url: http://product-service:8081/api
@@ -28,6 +38,8 @@ product:
 logging:
   level:
     com.ecommerce: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 eureka:
   instance:
     prefer-ip-address: true

@@ -19,6 +19,8 @@ spring:
     type: redis
     redis:
       time-to-live: 600000
+  zipkin:
+    base-url: http://zipkin:9411
   cloud:
     stream:
       function:
@@ -35,6 +37,16 @@ spring:
 logging:
   level:
     com.ecommerce: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
 
 eureka:
   client:

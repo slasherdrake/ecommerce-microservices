@@ -20,6 +20,8 @@ spring:
     loadbalancer:
       ribbon:
         enabled: false
+  zipkin:
+    base-url: http://zipkin:9411
   security:
     oauth2:
       resourceserver:
@@ -27,6 +29,12 @@ spring:
           issuer-uri: http://keycloak:8080/realms/drake-realm
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
   endpoints:
     web:
       exposure:
